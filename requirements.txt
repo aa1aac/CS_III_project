@@ -1,0 +1,6 @@
+prompt-toolkit==1.0.14
+Pygments==2.13.0
+PyInquirer==1.0.3
+regex==2022.10.31
+six==1.16.0
+wcwidth==0.2.5
