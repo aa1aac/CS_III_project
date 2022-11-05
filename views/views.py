@@ -79,6 +79,45 @@ def starter_prompt():
 def exit():
     return
 
+def logged_in_prompts():
+    questions = [{
+        'type' : 'list',
+        'name' : 'user_input',
+        'message': 'Please choose what you want to do',
+        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music']
+        }]
+    
+    answers = prompt(questions=questions, style=custom_style_3)
+    user_input = answers.get('user_input')
+
+    if user_input == 'view playlist':
+        # TODO: display from the database
+        pass
+    elif user_input == 'add playlist':
+        questions = [{
+        'type': "input",
+        "name": "name",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        }
+        ]
+        answers = prompt(questions=questions, style=custom_style_3)
+        name = answers.get('name')
+        # TODO: add playlist to the database
+
+    elif user_input == 'remove playlist':
+        # TODO: remove the playlist from the database
+        pass
+    elif user_input == 'add music':
+        # TODO: add the music to the database
+        pass
+    elif user_input == 'delete music':
+        # TODO: remove the music form the database
+        pass
+
+
+
+
 def login():
     questions = [{
         'type': "input",
@@ -94,7 +133,19 @@ def login():
         },]
     
     answers = prompt(questions=questions, style=custom_style_3)
-    user_input = answers.get('user_input')
+    email = answers.get('email')
+    password = answers.get('password')
+
+    # TODO: call backend for the login
+
+    # if login successful, for now passed as true
+    if True:
+        logged_in_prompts()
+    else:
+        print("*****   Invalid credentials  ******* ")
+        print("*****   Let's restart        ******* ")
+        login()
+        
 
 
 def sign_up():
@@ -134,8 +185,13 @@ def sign_up():
         print('The password is not the same')
         sign_up()
     else:
-        # signup the user
-        pass
+        #TODO: signup the user
+        
+        #TODO: return the user back to the prompt
+
+        print("The user has been created! ")
+        return starter_prompt()
+
         
     
 
