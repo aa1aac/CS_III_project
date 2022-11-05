@@ -116,9 +116,26 @@ def sign_up():
         "name": "password",
         "message": "Please enter your password",
         "validate": PasswordValidator,
+        },
+        {
+        'type': "password",
+        "name": "password2",
+        "message": "Please confirm your password",
+        "validate": PasswordValidator,
         }
         ]
     
     answers = prompt(questions=questions, style=custom_style_3)
-    user_input = answers.get('user_input')
+    email = answers.get('email')
+    name = answers.get('name')
+    password = answers.get('password')
+    password2 = answers.get('password2')
+    if password != password2:
+        print('The password is not the same')
+        sign_up()
+    else:
+        # signup the user
+        pass
+        
+    
 
