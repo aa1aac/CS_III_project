@@ -6,11 +6,12 @@ key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 supabase: Client = create_client(url, key)
 
 loginDetails = None
-try:
-    loginDetails = supabase.auth.sign_in(email=username, password=password)
-except:
-    print("Login credentials are invalid.")
-    print("You can try again! Or create a new user by typing 'create an account'")
+def signIn():
+    try:
+        loginDetails = supabase.auth.sign_in(email=username, password=password)
+    except:
+        print("Login credentials are invalid.")
+        print("You can try again! Or create a new user by typing 'create an account'")
     
 def signUp():
     loginDetails = supabase.auth.sign_up(email=username, password=password)
