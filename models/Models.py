@@ -6,15 +6,16 @@ key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 supabase: Client = create_client(url, key)
 
 loginDetails = None
-def signIn():
+def signIn(username, password):
     try:
         loginDetails = supabase.auth.sign_in(email=username, password=password)
+        return True
     except:
-        print("Login credentials are invalid.")
-        print("You can try again! Or create a new user by typing 'create an account'")
+        return False
     
-def signUp():
+def signUp(username, password):
     loginDetails = supabase.auth.sign_up(email=username, password=password)
+    return True
     
 
 def isPlaylistValid(name):
@@ -28,13 +29,13 @@ def isPlaylistValid(name):
 
 def createPlaylist(name):
     newPlaylist = supabase.table("playlist").insert({"createdby": str(loginDetails.user.id), "playlistname": name}).execute()
-    return "\nPlaylist has been successfully created!!!!!!"
+    return True
 
 def deletePlaylist(name):
     if isPlaylistValid(name):
         supabase.table("playlist").delete().eq("createdby",str(loginDetails.user.id)).eq("playlist",name).execute()
-        return "\n" + name + "'s playlist has been successfully deleted!"
-    return "\n" + name + "'s playlist does not exist!"
+        return True
+    return False
 
 def addSong(songName, playListName):
     if isPlaylistValid(playListName):
@@ -44,8 +45,8 @@ def addSong(songName, playListName):
                 for i in v:
                     i["songs"].append(songName)
                     supabase.table("playlist").update({"songs":i["songs"]}).eq("playlistname",playListName).eq("createdby", str(loginDetails.user.id)).execute()
-                    return "\nSong has been successfully added!!"
-    return "\n" + playListName + "'s playlist does not exist!"
+                    return True
+    return False
 
 
 def deleteSong(songName, playListName):
@@ -58,8 +59,8 @@ def deleteSong(songName, playListName):
                         return "\nSong is not in specificied playlist"
                     i["songs"].remove(songName)
                     supabase.table("playlist").update({"songs":i["songs"]}).eq("playlistname",playListName).eq("createdby", str(loginDetails.user.id)).execute()
-                    return "Song has been successfully deleted!!"
-    return "\n" + playListName + "'s playlist does not exist!"
+                    return True
+    return False
 
 def viewPlaylists():
     playlistList = supabase.table("playlist").select("playlistname").eq("createdby", str(loginDetails.user.id)).execute()
