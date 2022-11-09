@@ -11,8 +11,7 @@ def signIn(username, password):
     try:
         loginDetails = supabase.auth.sign_in(email=username, password=password)
         return True
-    except Error:
-        print(Error)
+    except:
         return False
     
 def signUp(username, password):

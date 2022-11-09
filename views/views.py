@@ -86,7 +86,7 @@ def logged_in_prompts():
         'type' : 'list',
         'name' : 'user_input',
         'message': 'Please choose what you want to do',
-        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'exit']
+        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'view song', "logout"]
         }]
     
     answers = prompt(questions=questions, style=custom_style_3)
@@ -95,6 +95,8 @@ def logged_in_prompts():
     if user_input == 'view playlist':
         viewPlaylists()
         logged_in_prompts()
+    elif user_input == 'logout':
+        starter_prompt()
     elif user_input == 'add playlist':
         questions = [{
         'type': "input",
@@ -125,7 +127,9 @@ def logged_in_prompts():
         ]
 
         answers = prompt(questions)
-        name = answers.get(name)
+        name = answers.get('name')
+        print(name)
+
         res = deletePlaylist(name)
 
         if res:
@@ -166,10 +170,45 @@ def logged_in_prompts():
 
     elif user_input == 'delete music':
         # TODO: remove the music form the database
+        questions = [{
+        'type': "input",
+        "name": "playlist",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        }, 
+        {
+            "type": "input",
+            "name" : "music",
+            "message": "Please enter the song name",
+            "validate": NameValidator,
+        }
+        ]
+        
+        answers = prompt(questions)
+        song_name = answers.get("music")
+        playlist_name = answers.get("playlist")
 
-        pass
-    elif user_input == 'exit':
-        return
+        res = deleteSong(song_name, playlist_name)
+        if not res:
+            print("Deletion unsuccessful")
+        else:
+            print("deletion successful")
+        
+        logged_in_prompts()
+
+    elif user_input == 'view song':
+        questions = [{
+        'type': "input",
+        "name": "name",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        }
+        ]
+
+        answers = prompt(questions)
+        playListName = answers.get('name')
+        viewSongsPerPlaylist(playListName)
+        logged_in_prompts()
 
 
 
