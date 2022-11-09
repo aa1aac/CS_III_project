@@ -3,6 +3,8 @@ from examples import  custom_style_3
 from prompt_toolkit.validation import Validator, ValidationError
 import re
 
+from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist, addSong, deleteSong
+
 def views():
     starter_prompt()
 
@@ -84,15 +86,17 @@ def logged_in_prompts():
         'type' : 'list',
         'name' : 'user_input',
         'message': 'Please choose what you want to do',
-        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music']
+        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'view song', "logout"]
         }]
     
     answers = prompt(questions=questions, style=custom_style_3)
     user_input = answers.get('user_input')
 
     if user_input == 'view playlist':
-        # TODO: display from the database
-        pass
+        viewPlaylists()
+        logged_in_prompts()
+    elif user_input == 'logout':
+        starter_prompt()
     elif user_input == 'add playlist':
         questions = [{
         'type': "input",
@@ -103,17 +107,108 @@ def logged_in_prompts():
         ]
         answers = prompt(questions=questions, style=custom_style_3)
         name = answers.get('name')
-        # TODO: add playlist to the database
+        res = createPlaylist(name)
+
+        if not res:
+            print("it was unsuccessful ")
+            print('Please try again')
+        else:
+            print('it was successful')
+        
+        logged_in_prompts()
 
     elif user_input == 'remove playlist':
-        # TODO: remove the playlist from the database
-        pass
+        questions = [{
+        'type': "input",
+        "name": "name",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        }
+        ]
+
+        answers = prompt(questions)
+        name = answers.get('name')
+        print(name)
+
+        res = deletePlaylist(name)
+
+        if res:
+            print("deletion successful")
+        else:
+            print("deletion unsuccessful")
+            print("Let's try one more time")
+        logged_in_prompts()
+
     elif user_input == 'add music':
-        # TODO: add the music to the database
-        pass
+        questions = [{
+        'type': "input",
+        "name": "playlist",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        },
+        {
+            'type': "input",
+            "name": "song",
+            "message" : "Please enter the name of the song",
+            "validate": NameValidator
+        }
+        ]
+        
+        answers = prompt(questions)
+
+        playlist = answers.get('playlist')
+        song = answers.get('song')
+        res = addSong(song, playlist)
+
+        if res:
+            print("addition of song successful")
+        else:
+            print("addition of the song was not successful")
+            print("let's try again")
+        
+        logged_in_prompts()
+
     elif user_input == 'delete music':
         # TODO: remove the music form the database
-        pass
+        questions = [{
+        'type': "input",
+        "name": "playlist",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        }, 
+        {
+            "type": "input",
+            "name" : "music",
+            "message": "Please enter the song name",
+            "validate": NameValidator,
+        }
+        ]
+        
+        answers = prompt(questions)
+        song_name = answers.get("music")
+        playlist_name = answers.get("playlist")
+
+        res = deleteSong(song_name, playlist_name)
+        if not res:
+            print("Deletion unsuccessful")
+        else:
+            print("deletion successful")
+        
+        logged_in_prompts()
+
+    elif user_input == 'view song':
+        questions = [{
+        'type': "input",
+        "name": "name",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        }
+        ]
+
+        answers = prompt(questions)
+        playListName = answers.get('name')
+        viewSongsPerPlaylist(playListName)
+        logged_in_prompts()
 
 
 
@@ -137,9 +232,10 @@ def login():
     password = answers.get('password')
 
     # TODO: call backend for the login
+    res = signIn(username=email, password=password)
 
     # if login successful, for now passed as true
-    if True:
+    if res:
         logged_in_prompts()
     else:
         print("*****   Invalid credentials  ******* ")
@@ -182,15 +278,21 @@ def sign_up():
     password = answers.get('password')
     password2 = answers.get('password2')
     if password != password2:
-        print('The password is not the same')
+        print("The password is not the same")
+        print(" let's start again ")
         sign_up()
     else:
         #TODO: signup the user
-        
+        res = signUp(email, password=password)
         #TODO: return the user back to the prompt
+        if res:
+            print("The user has been created! ")
+            starter_prompt()
+        else:
+            print("signup unsuccessful")
+            sign_up()
 
-        print("The user has been created! ")
-        return starter_prompt()
+        
 
         
     

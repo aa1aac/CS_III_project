@@ -7,6 +7,7 @@ supabase: Client = create_client(url, key)
 
 loginDetails = None
 def signIn(username, password):
+    global loginDetails
     try:
         loginDetails = supabase.auth.sign_in(email=username, password=password)
         return True
@@ -14,6 +15,7 @@ def signIn(username, password):
         return False
     
 def signUp(username, password):
+    global loginDetails
     loginDetails = supabase.auth.sign_up(email=username, password=password)
     return True
     
