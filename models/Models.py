@@ -34,8 +34,9 @@ def createPlaylist(name):
     return True
 
 def deletePlaylist(name):
+    # print(isPlaylistValid("playlist5"))
     if isPlaylistValid(name):
-        supabase.table("playlist").delete().eq("createdby",str(loginDetails.user.id)).eq("playlist",name).execute()
+        supabase.table("playlist").delete().eq("createdby",str(loginDetails.user.id)).eq("playlistname",name).execute()
         return True
     return False
 
@@ -77,5 +78,4 @@ def viewSongsPerPlaylist(playListName):
             print(j)
         break
     return 
-
 
