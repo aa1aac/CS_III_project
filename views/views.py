@@ -3,7 +3,7 @@ from examples import  custom_style_3
 from prompt_toolkit.validation import Validator, ValidationError
 import re
 
-from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist, addSong
+from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist, addSong, deleteSong
 
 def views():
     starter_prompt()
@@ -136,7 +136,6 @@ def logged_in_prompts():
         logged_in_prompts()
 
     elif user_input == 'add music':
-        # TODO: add the music to the database
         questions = [{
         'type': "input",
         "name": "playlist",
@@ -164,9 +163,10 @@ def logged_in_prompts():
             print("let's try again")
         
         logged_in_prompts()
-        
+
     elif user_input == 'delete music':
         # TODO: remove the music form the database
+
         pass
     elif user_input == 'exit':
         return
@@ -244,10 +244,16 @@ def sign_up():
         sign_up()
     else:
         #TODO: signup the user
+        res = signUp(email, password=password)
         #TODO: return the user back to the prompt
+        if res:
+            print("The user has been created! ")
+            starter_prompt()
+        else:
+            print("signup unsuccessful")
+            sign_up()
 
-        print("The user has been created! ")
-        return sign_up()
+        
 
         
     
