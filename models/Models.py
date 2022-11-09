@@ -79,7 +79,3 @@ def viewSongsPerPlaylist(playListName):
         break
     return 
 
-
-print(deletePlaylist("playlist 5"))
-
-
