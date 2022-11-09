@@ -3,7 +3,7 @@ from examples import  custom_style_3
 from prompt_toolkit.validation import Validator, ValidationError
 import re
 
-from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist
+from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist, addSong
 
 def views():
     starter_prompt()
@@ -116,7 +116,6 @@ def logged_in_prompts():
         logged_in_prompts()
 
     elif user_input == 'remove playlist':
-        # TODO: remove the playlist from the database
         questions = [{
         'type': "input",
         "name": "name",
@@ -138,7 +137,34 @@ def logged_in_prompts():
 
     elif user_input == 'add music':
         # TODO: add the music to the database
-        pass
+        questions = [{
+        'type': "input",
+        "name": "playlist",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        },
+        {
+            'type': "input",
+            "name": "song",
+            "message" : "Please enter the name of the song",
+            "validate": NameValidator
+        }
+        ]
+        
+        answers = prompt(questions)
+
+        playlist = answers.get('playlist')
+        song = answers.get('song')
+        res = addSong(song, playlist)
+
+        if res:
+            print("addition of song successful")
+        else:
+            print("addition of the song was not successful")
+            print("let's try again")
+        
+        logged_in_prompts()
+        
     elif user_input == 'delete music':
         # TODO: remove the music form the database
         pass
