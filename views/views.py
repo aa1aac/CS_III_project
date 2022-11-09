@@ -3,7 +3,7 @@ from examples import  custom_style_3
 from prompt_toolkit.validation import Validator, ValidationError
 import re
 
-from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist
+from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist
 
 def views():
     starter_prompt()
@@ -86,14 +86,13 @@ def logged_in_prompts():
         'type' : 'list',
         'name' : 'user_input',
         'message': 'Please choose what you want to do',
-        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music']
+        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'exit']
         }]
     
     answers = prompt(questions=questions, style=custom_style_3)
     user_input = answers.get('user_input')
 
     if user_input == 'view playlist':
-        # TODO: display from the database
         viewPlaylists()
         logged_in_prompts()
     elif user_input == 'add playlist':
@@ -118,13 +117,33 @@ def logged_in_prompts():
 
     elif user_input == 'remove playlist':
         # TODO: remove the playlist from the database
-        pass
+        questions = [{
+        'type': "input",
+        "name": "name",
+        "message": "Please enter the name of the playlist",
+        "validate": NameValidator,
+        }
+        ]
+
+        answers = prompt(questions)
+        name = answers.get(name)
+        res = deletePlaylist(name)
+
+        if res:
+            print("deletion successful")
+        else:
+            print("deletion unsuccessful")
+            print("Let's try one more time")
+        logged_in_prompts()
+
     elif user_input == 'add music':
         # TODO: add the music to the database
         pass
     elif user_input == 'delete music':
         # TODO: remove the music form the database
         pass
+    elif user_input == 'exit':
+        return
 
 
 
