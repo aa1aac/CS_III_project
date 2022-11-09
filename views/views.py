@@ -3,6 +3,8 @@ from examples import  custom_style_3
 from prompt_toolkit.validation import Validator, ValidationError
 import re
 
+from models.Models import signUp, signIn
+
 def views():
     starter_prompt()
 
@@ -137,9 +139,10 @@ def login():
     password = answers.get('password')
 
     # TODO: call backend for the login
+    res = signIn(username=email, password=password)
 
     # if login successful, for now passed as true
-    if True:
+    if res:
         logged_in_prompts()
     else:
         print("*****   Invalid credentials  ******* ")
@@ -182,11 +185,11 @@ def sign_up():
     password = answers.get('password')
     password2 = answers.get('password2')
     if password != password2:
-        print('The password is not the same')
+        print("The password is not the same")
+        print(" let's start again ")
         sign_up()
     else:
         #TODO: signup the user
-        
         #TODO: return the user back to the prompt
 
         print("The user has been created! ")
