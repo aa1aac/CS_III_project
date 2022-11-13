@@ -188,18 +188,27 @@ def logged_in_prompts():
             "name" : "music",
             "message": "Please enter the song name",
             "validate": NameValidator,
+        },
+
+        {
+            "type": "input",
+            "name" : "artist",
+            "message": "Please enter the artist name",
+            "validate": NameValidator,
         }
         ]
         
         answers = prompt(questions)
         song_name = answers.get("music")
         playlist_name = answers.get("playlist")
+        artist_name = answers.get("artist")
 
         res = deleteSong(song_name, playlist_name)
         if not res:
             print("Deletion unsuccessful")
         else:
             print("deletion successful")
+            print("Please try again later")
         
         logged_in_prompts()
     elif user_input == 'search music':
