@@ -40,27 +40,27 @@ def deletePlaylist(name):
         return True
     return False
 
-def addSong(songName, playListName):
+def addSong(songName, playListName, artisteName):
     if isPlaylistValid(playListName):
         songsTable = supabase.table("playlist").select("songs").eq("createdby", str(loginDetails.user.id)).eq("playlistname", playListName).execute()
         for k,v in songsTable:
             if k == "data":
                 for i in v:
-                    i["songs"].append(songName)
+                    i["songs"].append([songName, artisteName])
                     supabase.table("playlist").update({"songs":i["songs"]}).eq("playlistname",playListName).eq("createdby", str(loginDetails.user.id)).execute()
                     return True
     return False
 
 
-def deleteSong(songName, playListName):
+def deleteSong(songName, playListName, artisteName):
     if isPlaylistValid(playListName):
         songsTable = supabase.table("playlist").select("songs").eq("createdby", str(loginDetails.user.id)).eq("playlistname", playListName).execute()
         for k,v in songsTable:
             if k == "data":
                 for i in v:
-                    if songName not in i["songs"]:
+                    if [songName, artisteName] not in i["songs"]:
                         return "\nSong is not in specificied playlist"
-                    i["songs"].remove(songName)
+                    i["songs"].remove([songName, artisteName])
                     supabase.table("playlist").update({"songs":i["songs"]}).eq("playlistname",playListName).eq("createdby", str(loginDetails.user.id)).execute()
                     return True
     return False
@@ -74,8 +74,27 @@ def viewPlaylists():
 def viewSongsPerPlaylist(playListName):
     songsList = supabase.table("playlist").select("songs").eq("createdby", str(loginDetails.user.id)).eq("playlistname", playListName).execute()
     for i in songsList.data:
-        for j in i["songs"]:
-            print(j)
+        for a, b in i["songs"]:
+            print(a + " by "+ b)
         break
     return 
+
+def searchByArtiste(artisteName, playListName):
+    songsList = supabase.table("playlist").select("songs").eq("createdby", str(loginDetails.user.id)).eq("playlistname", playListName).execute()
+    for i in songsList.data:
+        for a, b in i["songs"]:
+            if b == artisteName:
+                print(a + " by "+ b)
+        break
+    return 
+
+def searchBySong(songName, playListName):
+    songsList = supabase.table("playlist").select("songs").eq("createdby", str(loginDetails.user.id)).eq("playlistname", playListName).execute()
+    for i in songsList.data:
+        for a, b in i["songs"]:
+            if a == songName:
+                print(a + " by "+ b)
+        break
+    return 
+
 
