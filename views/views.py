@@ -86,7 +86,7 @@ def logged_in_prompts():
         'type' : 'list',
         'name' : 'user_input',
         'message': 'Please choose what you want to do',
-        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'view song', "logout"]
+        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'view song', "logout", "search music"]
         }]
     
     answers = prompt(questions=questions, style=custom_style_3)
@@ -151,6 +151,12 @@ def logged_in_prompts():
             "name": "song",
             "message" : "Please enter the name of the song",
             "validate": NameValidator
+        },
+        {
+            'type': "input",
+            "name": "artist",
+            "message" : "Please enter the artist",
+            "validate": NameValidator
         }
         ]
         
@@ -158,6 +164,7 @@ def logged_in_prompts():
 
         playlist = answers.get('playlist')
         song = answers.get('song')
+        artist = answers.get('artist')
         res = addSong(song, playlist)
 
         if res:
@@ -181,20 +188,40 @@ def logged_in_prompts():
             "name" : "music",
             "message": "Please enter the song name",
             "validate": NameValidator,
+        },
+
+        {
+            "type": "input",
+            "name" : "artist",
+            "message": "Please enter the artist name",
+            "validate": NameValidator,
         }
         ]
         
         answers = prompt(questions)
         song_name = answers.get("music")
         playlist_name = answers.get("playlist")
+        artist_name = answers.get("artist")
 
         res = deleteSong(song_name, playlist_name)
         if not res:
             print("Deletion unsuccessful")
         else:
             print("deletion successful")
+            print("Please try again later")
         
         logged_in_prompts()
+    elif user_input == 'search music':
+        questions = [{
+        'type': "input",
+        "name": "key",
+        "message": "Please enter the keyword",
+        "validate": NameValidator,
+        }]
+        answers = prompt(questions)
+        keyword = answers.get('key')
+        # TODO: search with keyword
+
 
     elif user_input == 'view song':
         questions = [{
