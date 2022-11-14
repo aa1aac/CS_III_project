@@ -3,10 +3,11 @@ from examples import  custom_style_3
 from prompt_toolkit.validation import Validator, ValidationError
 import re
 
-from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist, addSong, deleteSong
+from models.Models import signUp, signIn, viewPlaylists, viewSongsPerPlaylist, createPlaylist, deletePlaylist, addSong, deleteSong, searchByArtiste, searchBySong
 
 def views():
     starter_prompt()
+    return
 
 class NameValidator(Validator):
     def validate(self, document):
@@ -76,7 +77,7 @@ def starter_prompt():
     elif user_input == 'sign up':
         sign_up()
     elif user_input == 'exit':
-        exit()
+        return
 
 def exit():
     return
@@ -165,7 +166,7 @@ def logged_in_prompts():
         playlist = answers.get('playlist')
         song = answers.get('song')
         artist = answers.get('artist')
-        res = addSong(song, playlist)
+        res = addSong(song, playlist, artist)
 
         if res:
             print("addition of song successful")
@@ -203,7 +204,7 @@ def logged_in_prompts():
         playlist_name = answers.get("playlist")
         artist_name = answers.get("artist")
 
-        res = deleteSong(song_name, playlist_name)
+        res = deleteSong(song_name, playlist_name, artist_name)
         if not res:
             print("Deletion unsuccessful")
         else:
@@ -213,14 +214,61 @@ def logged_in_prompts():
         logged_in_prompts()
     elif user_input == 'search music':
         questions = [{
-        'type': "input",
-        "name": "key",
-        "message": "Please enter the keyword",
-        "validate": NameValidator,
+        'type': "list",
+        "name": "user_input",
+        "message": "Please enter the search type",
+        "choices" : ['search by artist', 'search by song name']
         }]
+        
         answers = prompt(questions)
-        keyword = answers.get('key')
-        # TODO: search with keyword
+
+        user_input = answers.get('user_input')
+        
+        if user_input == 'search by artist':
+            questions = [{
+                'type': "input",
+                "name": "artist",
+                "message": "Please enter the artist name",
+                "validate" : NameValidator
+             },
+            {
+                'type': "input",
+                "name": "playlist",
+                "message": "Please enter the playlist name",
+                "validate" : NameValidator
+            },
+                ]
+
+            answers = prompt(questions)
+
+            artist = answers.get('artist')
+            playlist = answers.get('playlist')
+
+            searchByArtiste(artist, playlist)
+        if user_input == 'search by song name':
+            questions = [{
+                'type': "input",
+                "name": "song",
+                "message": "Please enter the song name",
+                "validate" : NameValidator
+             },
+            {
+                'type': "input",
+                "name": "playlist",
+                "message": "Please enter the playlist name",
+                "validate" : NameValidator
+            }]
+            
+            answers = prompt(questions)
+
+            playlist = answers.get('playlist')
+            song = answers.get('song')
+
+            searchBySong(song, playlist)
+
+
+
+        logged_in_prompts()
 
 
     elif user_input == 'view song':
