@@ -212,9 +212,10 @@ def logged_in_prompts():
         res = deleteSong(song_name, playlist_name, artist_name)
         if not res:
             print("Deletion unsuccessful")
+            print("Please try again later")
+
         else:
             print("deletion successful")
-            print("Please try again later")
         
         logged_in_prompts()
     elif user_input == 'search music':
