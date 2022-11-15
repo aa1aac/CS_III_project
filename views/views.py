@@ -83,11 +83,16 @@ def exit():
     return
 
 def logged_in_prompts():
+    '''
+        function that shows the prompts to the user.
+
+        args: none
+    '''
     questions = [{
         'type' : 'list',
         'name' : 'user_input',
         'message': 'Please choose what you want to do',
-        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'view song', "logout", "search music"]
+        'choices': ['view playlist', 'add playlist', 'remove playlist', 'add music', 'delete music', 'view song', "search music", "logout"]
         }]
     
     answers = prompt(questions=questions, style=custom_style_3)
@@ -129,7 +134,6 @@ def logged_in_prompts():
 
         answers = prompt(questions)
         name = answers.get('name')
-        print(name)
 
         res = deletePlaylist(name)
 
@@ -138,6 +142,7 @@ def logged_in_prompts():
         else:
             print("deletion unsuccessful")
             print("Let's try one more time")
+        
         logged_in_prompts()
 
     elif user_input == 'add music':
@@ -306,7 +311,6 @@ def login():
     email = answers.get('email')
     password = answers.get('password')
 
-    # TODO: call backend for the login
     res = signIn(username=email, password=password)
 
     # if login successful, for now passed as true
@@ -357,9 +361,7 @@ def sign_up():
         print(" let's start again ")
         sign_up()
     else:
-        #TODO: signup the user
         res = signUp(email, password=password)
-        #TODO: return the user back to the prompt
         if res:
             print("The user has been created! ")
             starter_prompt()
